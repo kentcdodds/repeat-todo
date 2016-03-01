@@ -1,4 +1,5 @@
 // thanks Jake! https://github.com/jakearchibald/simple-serviceworker-tutorial/blob/gh-pages/sw.js
+var currentCache = 'REPEATE_TODO_v2';
 
 // Chrome's currently missing some useful cache methods,
 // this polyfill adds them.
@@ -13,7 +14,7 @@ self.addEventListener('install', function onServiceWorkerInstall(event) {
   // long install takes, and if it failed
   event.waitUntil(
     // We open a cache…
-    caches.open('REPEAT_TODO').then(function(cache) {
+    caches.open(currentCache).then(function(cache) {
       // And add resources to it
       return cache.addAll([
         './',
@@ -43,6 +44,18 @@ self.addEventListener('fetch', function onServiceWorkerFetch(event) {
   );
 });
 
+// delete all older caches
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(keyList) {
+      return Promise.all(keyList.map(function(key) {
+        if (currentCache !== key) {
+          return caches.delete(key);
+        }
+      }));
+    })
+  );
+});
 
 
 function polyfillCache() {
