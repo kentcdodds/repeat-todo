@@ -39,6 +39,7 @@ function ListChooser({
 
 ListChooser.propTypes = {
   lists: pt.array.isRequired,
+  selectedListIndex: pt.string.isRequired,
   onAddList: pt.func.isRequired,
   onChange: pt.func.isRequired,
 }

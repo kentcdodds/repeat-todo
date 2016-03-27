@@ -55,7 +55,7 @@ const App = React.createClass({
         ...todoList,
         selectedListIndex: todoList.lists.length.toString(),
         lists: [...todoList.lists, list],
-      }
+      },
     }, () => {
       this._updateStoreAndState()
     })

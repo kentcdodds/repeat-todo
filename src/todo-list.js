@@ -15,7 +15,7 @@ function TodoList({
   const formStyle = {
     display: 'flex',
     justifyContent: 'space-between',
-    textAlign: 'left'
+    textAlign: 'left',
   }
   return (
     <div>

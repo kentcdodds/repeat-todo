@@ -1,5 +1,7 @@
 # Repeat Todo
 
+[![Build Status](https://img.shields.io/travis/kentcdodds/repeat-todo.svg?style=flat-square)](https://travis-ci.org/kentcdodds/repeat-todo)
+
 This is a simple app to help my wife keep track of her in-order Todos.
 
 Look at npm scripts to see what's possible :-)
