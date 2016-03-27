@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import uuid from 'an-uuid'
 import {arrayMoveToEnd, arrayRemoveElement} from './utils'
 import TodoList from './todo-list'
+import ListChooser from './list-chooser'
 import Store from './store'
 import migrations from './migrations'
 
@@ -21,14 +22,18 @@ const App = React.createClass({
   },
   render() {
     const {lists, selectedListIndex} = this.state.todoList
+    console.log('rendering', this.state.todoList)
     return (
       <div>
         <h1>Repeat Todo</h1>
-        <select onChange={this._onSelectedListChange}>
-          {lists.map((l, i) => <option value={i} key={l.id}>{l.name}</option>)}
-        </select>
+        <ListChooser
+          lists={lists}
+          selectedListIndex={selectedListIndex}
+          onAddList={this._onAddList}
+          onChange={this._onSelectedListChange}
+        />
         {
-          lists[selectedListIndex] !== undefined ? (
+          lists && lists[selectedListIndex] !== undefined ? (
             <TodoList
               todoList={lists[selectedListIndex]}
               onAddTodo={this._onAddTodo}
@@ -39,6 +44,11 @@ const App = React.createClass({
         }
       </div>
     )
+  },
+  _onAddList(name) {
+    const list = {name, todos: [], id: uuid()}
+    this.state.todoList.lists.push(list)
+    this._updateStoreAndState()
   },
   _onAddTodo(val) {
     const {lists, selectedListIndex} = this.state.todoList
@@ -59,9 +69,15 @@ const App = React.createClass({
     list.todos = arrayRemoveElement(list.todos, index)
     this._updateStoreAndState()
   },
-  _onSelectedListChange(event) {
-    this.setState({selectedListIndex: event.target.value})
-    this._updateStore()
+  _onSelectedListChange(selectedListIndex) {
+    this.setState({
+      todoList: {
+        ...this.state.todoList,
+        selectedListIndex,
+      },
+    }, () => {
+      this._updateStoreAndState()
+    })
   },
   _updateStoreAndState() {
     this._updateStore()

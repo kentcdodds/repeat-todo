@@ -21,7 +21,7 @@ class Store {
             todos: [],
           },
         ],
-        selectedListIndex: 0,
+        selectedListIndex: '0',
       })
     }
     this.applyMigrations(migrations)
@@ -32,12 +32,15 @@ class Store {
       ...this.get(),
       ...data,
     }
+    console.log('setting in store:', data)
     storage.setItem(this.storeId, JSON.stringify(data))
   }
 
   get() {
     const rawData = storage.getItem(this.storeId)
-    return JSON.parse(rawData)
+    const data = JSON.parse(rawData)
+    console.log('getting from store:', data)
+    return data
   }
 
   applyMigrations(migrations) {

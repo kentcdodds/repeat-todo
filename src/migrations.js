@@ -33,7 +33,7 @@ const migrations = [
             todos: Array.isArray(data) ? data : [],
           },
         ],
-        selectedListIndex: 0,
+        selectedListIndex: '0',
       }
     },
   },

@@ -74,7 +74,7 @@ function Todo({
 }
 
 Todo.propTypes = {
-  style: pt.obj,
+  style: pt.any,
   todo: pt.string,
   onComplete: pt.func,
   onDelete: pt.func,
