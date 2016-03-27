@@ -1,59 +1,81 @@
-import React from 'react'
+import React, {PropTypes as pt} from 'react'
 import ReactDOM from 'react-dom'
-import uuid from 'an-uuid';
-import TodoList from './todo-list'
-import AddTodo from './add-todo'
+import uuid from 'an-uuid'
 import {arrayMoveToEnd, arrayRemoveElement} from './utils'
-import Store from './store';
-import migrations from './migrations';
+import TodoList from './todo-list'
+import Store from './store'
+import migrations from './migrations'
 
 const App = React.createClass({
+  propTypes: {
+    store: pt.shape({
+      get: pt.func,
+      set: pt.func,
+    }).isRequired,
+  },
   getInitialState() {
-    return {todoList: []}
+    return {todoList: {lists: [], selectedListIndex: 0}}
   },
   componentDidMount() {
     this._updateStateFromStore()
   },
   render() {
+    const {lists, selectedListIndex} = this.state.todoList
     return (
       <div>
         <h1>Repeat Todo</h1>
-        <AddTodo
-          onAdd={this._onAdd}
-        />
-        <TodoList
-          todos={this.state.todoList}
-          onComplete={this._onComplete}
-          onDelete={this._onDelete}
-        />
+        <select onChange={this._onSelectedListChange}>
+          {lists.map((l, i) => <option value={i} key={l.id}>{l.name}</option>)}
+        </select>
+        {
+          lists[selectedListIndex] !== undefined ? (
+            <TodoList
+              todoList={lists[selectedListIndex]}
+              onAddTodo={this._onAddTodo}
+              onCompleteTodo={this._onCompleteTodo}
+              onDeleteTodo={this._onDeleteTodo}
+            />
+          ) : null
+        }
       </div>
     )
   },
-  _onAdd(val) {
-    const newItem = {id: uuid(), value: val};
-    const newList = [newItem, ...this.state.todoList];
-    this._updateStoreAndState(newList)
+  _onAddTodo(val) {
+    const {lists, selectedListIndex} = this.state.todoList
+    const list = lists[selectedListIndex]
+    const newItem = {id: uuid(), value: val}
+    list.todos.unshift(newItem)
+    this._updateStoreAndState()
   },
-  _onComplete(currentIndex) {
-    const newList = arrayMoveToEnd(this.state.todoList, currentIndex)
-    this._updateStoreAndState(newList)
+  _onCompleteTodo(currentIndex) {
+    const {lists, selectedListIndex} = this.state.todoList
+    const list = lists[selectedListIndex]
+    list.todos = arrayMoveToEnd(list.todos, currentIndex)
+    this._updateStoreAndState()
   },
-  _onDelete(index) {
-    const newList = arrayRemoveElement(this.state.todoList, index)
-    this._updateStoreAndState(newList)
+  _onDeleteTodo(index) {
+    const {lists, selectedListIndex} = this.state.todoList
+    const list = lists[selectedListIndex]
+    list.todos = arrayRemoveElement(list.todos, index)
+    this._updateStoreAndState()
   },
-  _updateStoreAndState(newList) {
-    this._updateStore(newList)
+  _onSelectedListChange(event) {
+    this.setState({selectedListIndex: event.target.value})
+    this._updateStore()
+  },
+  _updateStoreAndState() {
+    this._updateStore()
     this._updateStateFromStore()
   },
-  _updateStore(newList) {
-    this.props.store.set(newList);
+  _updateStore() {
+    const {lists, selectedListIndex} = this.state.todoList
+    this.props.store.set({lists, selectedListIndex})
   },
   _updateStateFromStore() {
-    const todoList = this.props.store.get() || [];
+    const todoList = this.props.store.get() || {lists: [], selectedListIndex: 0}
     this.setState({todoList})
-  }
-});
+  },
+})
 
 ReactDOM.render(
   <App store={new Store('todoList', migrations)} />,

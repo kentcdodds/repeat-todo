@@ -13,21 +13,33 @@
     "deploy": "surge --project ./dist --domain https://repeat-todo.surge.sh",
     "serve:dist": "http-server dist",
     "user-for-deploy": "echo kent+repeat-todo@doddsfamily.us",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint ."
   },
   "keywords": [],
   "author": "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
   "license": "MIT",
   "devDependencies": {
     "cpy-cli": "1.0.0",
+    "eslint": "2.5.1",
+    "eslint-config-kentcdodds": "6.0.1",
+    "eslint-plugin-react": "4.2.3",
     "http-server": "0.9.0",
     "npm-run-all": "1.5.1",
-    "quik": "0.4.3",
+    "quik": "0.4.5",
     "rimraf": "2.5.2",
     "surge": "0.17.7"
   },
   "dependencies": {
     "an-uuid": "^1.0.0",
     "react-motion": "^0.4.2"
+  },
+  "eslintConfig": {
+    "extends": "kentcdodds/react",
+    "rules": {
+      "comma-dangle": [
+        1,
+        "always-multiline"
+      ]
+    }
   }
 }

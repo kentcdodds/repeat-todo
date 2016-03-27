@@ -1,14 +1,11 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 export default React.createClass({
   propTypes: {
     onAdd: React.PropTypes.func,
   },
-  getInitialState: function() {
-    return {
-      todoInput: ''
-    }
+  getInitialState() {
+    return {todoInput: ''}
   },
   render() {
     return (
@@ -16,7 +13,7 @@ export default React.createClass({
         <input
           type="text"
           value={this.state.todoInput}
-					onChange={this._onTodoInputChange}
+          onChange={this._onTodoInputChange}
           style={{flex: 1}}
         />
         <button type="submit">

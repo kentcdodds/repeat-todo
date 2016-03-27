@@ -1,10 +1,10 @@
 export {arrayMoveToEnd, arrayRemoveElement}
 
 function arrayMoveToEnd(arr, fromIndex) {
-  const element = arr[fromIndex];
+  const element = arr[fromIndex]
   const newArray = [
     ...arrayRemoveElement(arr, fromIndex),
-    element
+    element,
   ]
   return newArray
 }
