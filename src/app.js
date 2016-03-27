@@ -39,6 +39,8 @@ const App = React.createClass({
               onAddTodo={this._onAddTodo}
               onCompleteTodo={this._onCompleteTodo}
               onDeleteTodo={this._onDeleteTodo}
+              onDeleteList={this._onDeleteList}
+              onRenameList={this._onRenameList}
             />
           ) : null
         }
@@ -47,7 +49,33 @@ const App = React.createClass({
   },
   _onAddList(name) {
     const list = {name, todos: [], id: uuid()}
-    this.state.todoList.lists.push(list)
+    const {todoList} = this.state
+    this.setState({
+      todoList: {
+        ...todoList,
+        selectedListIndex: todoList.lists.length.toString(),
+        lists: [...todoList.lists, list],
+      }
+    }, () => {
+      this._updateStoreAndState()
+    })
+  },
+  _onDeleteList(list) {
+    const {lists} = this.state.todoList
+    const index = lists.indexOf(list)
+    const newLists = arrayRemoveElement(lists, index)
+    this.setState({
+      todoList: {
+        ...this.state.todoList,
+        selectedListIndex: '0',
+        lists: newLists,
+      },
+    }, () => {
+      this._updateStoreAndState()
+    })
+  },
+  _onRenameList(list, newName) {
+    list.name = newName
     this._updateStoreAndState()
   },
   _onAddTodo(val) {

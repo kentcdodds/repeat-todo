@@ -18,7 +18,7 @@ function ListChooser({
         >
           {lists.map((l, i) => <option value={i} key={l.id}>{l.name}</option>)}
         </select>
-        <button type="submit">+</button>
+        <button type="submit" className="success">Create List</button>
       </form>
     </div>
   )

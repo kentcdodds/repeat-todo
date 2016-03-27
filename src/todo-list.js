@@ -2,21 +2,30 @@ import React, {PropTypes as pt} from 'react' // eslint-disable-line no-unused-va
 import ListOfTodos from './list-of-todos'
 import AddTodo from './add-todo'
 
-const noop = () => {}
-
 export default TodoList
 
 function TodoList({
   todoList,
-  onAddTodo = noop,
-  onCompleteTodo = noop,
-  onDeleteTodo = noop,
-  onRenameList = noop,
-  onDeleteList = noop,
+  onAddTodo,
+  onCompleteTodo,
+  onDeleteTodo,
+  onRenameList,
+  onDeleteList,
 }) {
+  const formStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    textAlign: 'left'
+  }
   return (
     <div>
-      <div>{todoList.name}</div>
+      <form
+        style={formStyle}
+        onSubmit={onDeleteSubmit}
+      >
+        <h2 style={{flex: 1}} onClick={onNameClick}>{todoList.name}</h2>
+        <button type="submit" className="danger">Delete List</button>
+      </form>
       <AddTodo
         onAdd={onAddTodo}
       />
@@ -27,6 +36,22 @@ function TodoList({
       />
     </div>
   )
+
+  function onDeleteSubmit(event) {
+    event.preventDefault()
+    const result = window.confirm(`Do you want to delete the ${todoList.name} list?`)
+    if (result) {
+      onDeleteList(todoList)
+    }
+  }
+
+  function onNameClick(event) {
+    event.preventDefault()
+    const result = window.prompt(`Rename ${todoList.name} to:`)
+    if (result) {
+      onRenameList(todoList, result)
+    }
+  }
 }
 
 TodoList.propTypes = {
