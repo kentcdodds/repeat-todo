@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rimraf dist/",
     "build": "quik --html index.html --output dist/index.html --production",
-    "copy": "cpy favicon.png service-worker.js dist/",
+    "copy": "cpy favicon.png service-worker.js launcher-* manifest.json dist/",
     "start": "quik",
     "predeploy": "npm-run-all clean --parallel build copy",
     "deploy": "surge --project ./dist --domain https://repeat-todo.surge.sh",
