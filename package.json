@@ -6,8 +6,10 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf dist/",
-    "build": "quik --html index.html --output dist/index.html --production",
-    "copy": "cpy favicon.png service-worker.js launcher-* manifest.json dist/",
+    "build": "quik --bundle index.js --output dist/index.js --production",
+    "copy": "npm-run-all copy:*",
+    "copy:root": "cpy favicon.png service-worker.js launcher-* manifest.json index.html dist/",
+    "copy:styles": "cpy \"styles/*\" dist/styles",
     "start": "quik",
     "predeploy": "npm-run-all clean --parallel build copy",
     "deploy": "surge --project ./dist --domain https://repeat-todo.surge.sh",
